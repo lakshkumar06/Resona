@@ -14,7 +14,31 @@ const Upload = () => {
   const dataArrayRef = useRef(null);
   const sourceRef = useRef(null);
 
+
+
+
+
+  const sendAudioToServer = async (blob) => {
+    const formData = new FormData();
+    formData.append("username", "testuser"); // Replace with actual username
+    formData.append("audio", blob, `audio_sample.wav`);
+  
+    try {
+      const response = await fetch("/voice/save-audio", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+      console.log("Server response:", data);
+    } catch (error) {
+      console.error("Error uploading audio:", error);
+    }
+  };
+  
   // Handle recording logic
+
+
+
   useEffect(() => {
     if (recording) {
       navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
@@ -47,18 +71,44 @@ const Upload = () => {
       }
     }
   }, [recording]);
+const handleNextClick = async () => {
+  if (nextCount < 10) {
+    setNextCount(nextCount + 1);
+    
+    if (mediaRecorderRef.current) {
+      const chunks = [];
+      const mediaRecorder = new MediaRecorder(mediaRecorderRef.current);
+      
+      mediaRecorder.ondataavailable = (event) => {
+        chunks.push(event.data);
+      };
 
-  const handleNextClick = () => {
-    if (nextCount < 10) {
-      setNextCount(nextCount + 1); // Increment count after each "Next"
+      mediaRecorder.onstop = async () => {
+        const blob = new Blob(chunks, { type: "audio/wav" });
+        await sendAudioToServer(blob);
+      };
+
+      mediaRecorder.start();
+      setTimeout(() => {
+        mediaRecorder.stop();
+      }, 5000); // Adjust duration as needed
     }
-  
-    // Check if nextCount is 10, and toggle the recording state
-    if (nextCount === 9) {
-      setRecording(prevRecording => !prevRecording); // Toggle recording state
+  }
+  else if (nextCount === 10) {
+    setNextCount(11); // Set nextCount to 11 after the 10th click
+    setRecording(false); // Stop the recording after the 10th sentence
+    // Stop the mediaRecorder and close the audio context if recording is stopped
+    if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.getTracks().forEach(track => track.stop());
+      mediaRecorderRef.current = null;
     }
-  };
-  
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+  }
+};
+
 
   // Generate a dynamic blob shape with smooth curves
   const generateBlobPath = (level) => {
@@ -105,7 +155,7 @@ const Upload = () => {
       if (currentMessageIndex >= statusMessages.length) {
         clearInterval(interval); // Clear the interval after all messages are shown
         setTimeout(() => {
-          window.location.href = "/"; // Redirect to homepage
+          window.location.href = "/Dashboard"; // Redirect to homepage
         }, 2000); // Delay the redirect to let the user see "Redirecting"
       }
     }, 2500); // Show each message for 2 seconds
@@ -140,7 +190,7 @@ const Upload = () => {
         </div>
 
         {/* Recording circle */}
-        {recording && nextCount < 10 && (
+        {recording && nextCount < 11 && (
           <div className="flex justify-center items-center">
             <svg className='h-[128px] w-[128px] overflow-visible' viewBox="0 0 128 128">
               <defs>
@@ -222,7 +272,7 @@ const Upload = () => {
 
 
       {/* Done Button */}
-{nextCount === 10 && !recording && !doneClicked && (
+{nextCount === 11 && !recording && !doneClicked && (
         <div className="mx-auto w-fit animate-grow">
           <button
             onClick={handleDoneClick}

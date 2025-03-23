@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import home, record_audio
+from .views import save_audio
 
 urlpatterns = [
+    path('save-audio', save_audio, name='save_audio'),
     
-    path('record', record_audio, name="record_audio"),
 ]
