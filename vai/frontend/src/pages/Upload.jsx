@@ -166,7 +166,7 @@ const handleNextClick = async () => {
 
         <div className="">
           {/* Display instructions and heading based on the nextCount */}
-          {nextCount < 10 && (
+          {nextCount < 11 && (
             <>
               <h2 className="text-[32px] font-bold text-center text-white">
                 {recording ? 'Say the following sentence' : 'Upload'}
@@ -184,7 +184,7 @@ const handleNextClick = async () => {
             </>
           )}
 
-          {recording && nextCount < 10 && (
+          {recording && nextCount < 11 && (
             <p className="text-[22px] font-medium text-[#B7B7B7] text-center mt-[1em]">“The quick brown fox jumps over the lazy dog”</p>
           )}
         </div>
