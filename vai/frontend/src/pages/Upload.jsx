@@ -8,11 +8,6 @@ const Upload = () => {
   const [doneClicked, setDoneClicked] = useState(false);
   const [statusText, setStatusText] = useState("");
 
-  const mediaRecorderRef = useRef(null);
-  const audioContextRef = useRef(null);
-  const analyserRef = useRef(null);
-  const dataArrayRef = useRef(null);
-  const sourceRef = useRef(null);
 
   const sendAudioToServer = async (blob) => {
     const formData = new FormData();
@@ -31,58 +26,15 @@ const Upload = () => {
     }
   };
 
-  useEffect(() => {
-    if (recording) {
-      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-        audioContextRef.current = new (window.AudioContext || window.webkitAudioContext)();
-        analyserRef.current = audioContextRef.current.createAnalyser();
-        analyserRef.current.fftSize = 256;
-        dataArrayRef.current = new Uint8Array(analyserRef.current.frequencyBinCount);
-
-        sourceRef.current = audioContextRef.current.createMediaStreamSource(stream);
-        sourceRef.current.connect(analyserRef.current);
-
-        const detectSound = () => {
-          analyserRef.current.getByteFrequencyData(dataArrayRef.current);
-          const volume = dataArrayRef.current.reduce((a, b) => a + b, 0) / dataArrayRef.current.length;
-          setAnimationLevel(volume * 1.5);
-          if (recording) requestAnimationFrame(detectSound);
-        };
-        detectSound();
-
-        mediaRecorderRef.current = stream;
-      });
-    } else {
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-        audioContextRef.current = null;
-      }
-      if (mediaRecorderRef.current) {
-        mediaRecorderRef.current.getTracks().forEach(track => track.stop());
-        mediaRecorderRef.current = null;
-      }
-    }
-  }, [recording]);
 
   const handleStopClick = async () => {
     console.log("Stop btn clicked")
-    if (mediaRecorderRef.current) {
-      const chunks = [];
-      const mediaRecorder = new MediaRecorder(mediaRecorderRef.current);
+
       
-      mediaRecorder.ondataavailable = (event) => {
-        chunks.push(event.data);
-      };
 
-      mediaRecorder.onstop = async () => {
-        const blob = new Blob(chunks, { type: "audio/wav" });
-        await sendAudioToServer(blob);
-      };
 
-      mediaRecorder.stop();
-      setRecording(false);
     }
-  };
+
 
 
   const handleStartNextClick = () => {
@@ -93,6 +45,7 @@ const Upload = () => {
       setRecording(true);  // Start recording for the next state
     }
   };
+
 const handleStopAndDone = () => {
   if (nextCount === 10) {
     setNextCount(11); // Ensuring nextCount reaches 11 after the last stop.
@@ -328,10 +281,10 @@ export default Upload;
 //         chunks.push(event.data);
 //       };
 
-//       mediaRecorder.onstop = async () => {
-//         const blob = new Blob(chunks, { type: "audio/wav" });
-//         await sendAudioToServer(blob);
-//       };
+      // mediaRecorder.onstop = async () => {
+      //   const blob = new Blob(chunks, { type: "audio/wav" });
+      //   await sendAudioToServer(blob);
+      // };
 
 //       mediaRecorder.start();
 //       setTimeout(() => {
