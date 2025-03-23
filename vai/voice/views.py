@@ -172,7 +172,7 @@ def test_watermark(request):
                 return JsonResponse({"error": "Failed to process audio"}, status=400)
 
             if result['prediction'] == 'REAL':
-                model_path = os.path.join(r'D:/DeepLearning-Project (virtual-env)/voiceauth/model', f"{username}.gmm")
+                model_path = os.path.join(r'voiceauth/model', f"{username}.gmm")
                 
                 # Known log-likelihoods from authentication samples
                 known_log_likelihoods = [-36.5, -35.8, -37.2]
