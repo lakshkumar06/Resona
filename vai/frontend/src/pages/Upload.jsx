@@ -1,4 +1,10 @@
 
+
+
+
+
+
+
 import React, { useState, useRef, useEffect } from 'react';
 import * as d3 from "d3";
 import axios from 'axios';
@@ -151,7 +157,7 @@ const handleNextClick = async () => {
 
 
 
-  const handleDoneClick = async () => {
+  const handleDoneClick = () => {
     setDoneClicked(true); // Set doneClicked to true to show the blob and carousel
     let statusMessages = ["Initializing", "Analyzing", "Creating Watermark", "Redirecting"];
     let currentMessageIndex = 0;
@@ -162,11 +168,27 @@ const handleNextClick = async () => {
       if (currentMessageIndex >= statusMessages.length) {
         clearInterval(interval); // Clear the interval after all messages are shown
         setTimeout(() => {
-          // Trigger the server-side watermark creation API
-          createWatermarkOnServer();
-  
-          // Redirect to the dashboard after a short delay
-          window.location.href = "/Dashboard"; // Redirect to homepage
+          // Make the API request to the back-end
+          fetch('/voice/create-watermark', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-CSRFToken': csrfToken,  // Assuming you have CSRF token handling in place
+            },
+            body: JSON.stringify({ /* Any required data */ })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.message === 'success') {
+              window.location.href = "/Dashboard"; // Redirect to homepage after success
+            } else {
+              // Handle any errors
+              console.error("Error:", data.error);
+            }
+          })
+          .catch((error) => {
+            console.error("Request failed:", error);
+          });
         }, 2000); // Delay the redirect to let the user see "Redirecting"
       }
     }, 2500); // Show each message for 2 seconds
@@ -344,6 +366,3 @@ const handleNextClick = async () => {
 };
 
 export default Upload;
-
-
-

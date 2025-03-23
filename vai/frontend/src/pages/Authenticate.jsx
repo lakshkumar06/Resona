@@ -109,7 +109,8 @@ const Authenticate = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-[#101010]">
+    <div className="bg-[#101010] h-screen">
+        <div className="flex justify-center items-center h-[90vh] bg-[#101010]">
       <div className="w-[80%] md:w-[50%] bg-black p-8 rounded-xl text-center text-white">
         <h2 className="text-[32px] font-bold mb-4">Authentication</h2>
         <p className="text-lg mb-4">Please say the following sentence:</p>
@@ -149,6 +150,15 @@ const Authenticate = () => {
           </div>
         )}
       </div>
+      </div>
+
+      <div className=" ">
+<div className="flex">
+    <button className=' w-[50%] h-[10vh] cursor-pointer right-0 '>No</button>
+ <button className="w-[50%] cursor-pointer h-[10vh] left-0 ">Yes</button>
+
+</div>
+</div>
     </div>
   );
 };

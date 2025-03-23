@@ -28,7 +28,7 @@ const HomepageAL = () => {
             <p className="text-[24px] mt-[10px] font-medium">Upload</p>
 
             </Link>
-            <Link to="/Transcribe" className="bg-white text-black rounded-[20px] w-1/2 text-center py-[40px] flexCol hover:bg-[#909090] transition-[0.2s]">
+            <Link to="/Authenticate" className="bg-white text-black rounded-[20px] w-1/2 text-center py-[40px] flexCol hover:bg-[#909090] transition-[0.2s]">
             <svg className='h-[50px] mx-auto' viewBox="0 0 44 46" fill="none" xmlns="http://www.w3.org/2000/svg">
 <path d="M18.7999 18.8C23.4391 18.8 27.1999 15.0392 27.1999 10.4C27.1999 5.76081 23.4391 2 18.7999 2C14.1607 2 10.3999 5.76081 10.3999 10.4C10.3999 15.0392 14.1607 18.8 18.7999 18.8Z" stroke="black" stroke-width="3.5"/>
 <path d="M35.6 34.55C35.6 39.7691 35.6 44 18.8 44C2 44 2 39.7691 2 34.55C2 29.3308 9.52161 25.1 18.8 25.1C28.0784 25.1 35.6 29.3308 35.6 34.55Z" stroke="black" stroke-width="3.5"/>

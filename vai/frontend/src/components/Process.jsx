@@ -1,115 +1,75 @@
-// import React from 'react'
-
-// const Process = () => {
-//   return (
-//     <div className='x-container bg-purple-500'>
-//       <div className="flex">
-//         <div className="w-1/2 h-screen flexCol">
-            
-//             <p className="">1. Audio Input</p>
-//             <p className="">The system captures and processes voice data from calls, media, or LLM-generated audio.</p>
-
-//         </div>
-//         <div className="w-1/2">
-//             <img src="/record.jpg" alt="" className="w-full h-full object-cover" />
-//         </div>
-        
-//       </div>
-//       <div className="flex">
-//       <div className="w-1/2 h-screen flexCol">
-            
-//             <p className="">2. Watermark & Signature Check</p>
-//             <p className="">Each audio file is scanned against a proprietary database of watermarks and voice signatures to detect ownership and authenticity.</p>
-
-//         </div>
-//         <div className="w-1/2">
-//             <img src="/spectrogram.png" alt="" className="w-full h-full object-cover" />
-//         </div>
-//       </div>
-//       <div className="flex">
-//         <div className="w-1/2 h-screen flexCol">
-            
-//             <p className="">3. Deepfake Detection</p>
-//             <p className="">Advanced AI models analyze speech patterns, tone, and frequency to identify synthetic voices or tampered audio.</p>
-
-//         </div>
-//         <div className="w-1/2">
-//             <img src="/deepfake.png" alt="" className="w-full h-full object-cover" />
-//         </div>
-        
-//       </div>
-     
-//     </div>
-//   )
-// }
-
-// export default Process
-import React, { useEffect, useState } from 'react';
+import React from "react";
 
 const Process = () => {
-  const [currentSectionIndex, setCurrentSectionIndex] = useState(0);
-  const [imageSrc, setImageSrc] = useState(
-    'https://liftoff.io/wp-content/uploads/2022/11/Vungle-exchange-homepage-content-block.svg'
-  );
-
-  const images = [
-    'https://liftoff.io/wp-content/uploads/2022/11/Vungle-exchange-homepage-content-block.svg',
-    'https://liftoff.io/wp-content/uploads/2022/11/Liftoff-monetize-home-page-1.svg',
-    'https://liftoff.io/wp-content/uploads/2022/10/v2.png',
-    'https://liftoff.io/wp-content/uploads/2022/11/Creative-studio-home-page-content-block-2.svg',
-  ];
-
-  const changeImage = (sectionIndex) => {
-    if (sectionIndex >= 0 && sectionIndex < images.length) {
-      setImageSrc(images[sectionIndex]);
-    }
-  };
-
-  useEffect(() => {
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          const sectionIndex = parseInt(entry.target.dataset.index);
-          if (sectionIndex !== currentSectionIndex) {
-            setCurrentSectionIndex(sectionIndex);
-            changeImage(sectionIndex);
-          }
-        }
-      });
-    }, { threshold: 1 });
-
-    const sections = document.querySelectorAll('.sections');
-    sections.forEach((section, index) => {
-      section.dataset.index = index;
-      observer.observe(section);
-    });
-
-    // Clean up the observer when component unmounts
-    return () => observer.disconnect();
-  }, [currentSectionIndex]);
-
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="flex justify-between relative max-w-screen-xl w-full text-white">
-        <div className="sections min-h-screen flex items-center justify-center">
-          <p>test 1</p>
+    <div className="flex flex-col items-center p-6 text-white min-h-screen">
+      <h1 className="text-3xl font-bold mb-6">Process Flow</h1>
+      <div className="flex text-center space-x-6">
+        {/* Speech Input */}
+        <div className="p-4 border border-gray-700 rounded-lg bg-gray-800 h-fit">
+          <h2 className="text-xl font-semibold">SPEECH</h2>
+          <div className="mt-2 bg-gray-700 p-2 rounded">Upload</div>
         </div>
-        <div className="sections min-h-screen flex items-center justify-center">
-          <p>test 2</p>
+
+        {/* OAuth Section */}
+        <div className="p-4 border border-gray-700 rounded-lg bg-gray-800 h-fit">
+          <h2 className="text-xl font-semibold">OAUTH</h2>
+          <div className="mt-2 space-y-2">
+            <div className="bg-gray-700 p-2 rounded">Login</div>
+            <div className="bg-gray-700 p-2 rounded">Sign Up</div>
+          </div>
         </div>
-        <div className="sections min-h-screen flex items-center justify-center">
-          <p>test 3</p>
+
+        {/* Frontend Section */}
+        <div className="  ">
+          <div className="p-4 border border-gray-700 rounded-lg bg-gray-800">
+          <h2 className="text-xl font-semibold">FRONTEND</h2>
+          <div className=" gap-4 mt-4 grid grid-cols-2">
+            <div className="p-2 bg-gray-700 rounded">Create Watermark</div>
+            <div className="p-2 bg-gray-700 rounded">Test Watermark</div>
+            </div>
+          </div>
+          <div className="p-4 border border-gray-700 rounded-lg bg-gray-800 mt-4">
+          <h2 className="text-xl font-semibold">BACKEND</h2>
+
+          </div>
+          <div className=" w-full max-w-6xl text-center grid grid-cols-2 mt-[20px] gap-4 ">
+            {/* Feature Extraction Block */}
+            <div className="">
+              <div className="mt-4 bg-gray-700 p-2 rounded">Preprocessing</div>
+              <div className="mt-4 bg-gray-700 p-2 rounded">Feature Extraction</div>
+              <div className="mt-4 bg-gray-700 p-2 rounded">Gaussian Model</div>
+              <div className="mt-4 bg-gray-700 p-2 rounded">Storing on Blockchain</div>
+            </div>
+
+            {/* Using Model D4s Net */}
+            <div className="">
+              <div className="mt-4 bg-gray-700 p-2 rounded">Preprocessing</div>
+              <div className="mt-4 bg-gray-700 p-2 rounded">Feature Extraction</div>
+              <div className="mt-4 bg-gray-700 p-2 rounded">Gaussian Model</div>
+            </div>
+
+            {/* Decision Path */}
+            
+          </div>
+
         </div>
-        <div className="sections min-h-screen flex items-center justify-center">
-          <p>test 4</p>
-        </div>
+        <div className=" flex flex-col justify-end">
+
+
+              <div className="mt-2 bg-gray-700 p-2 rounded">Using Model D4S Net</div>
+              <div className="mt-2 bg-gray-700 p-8 rounded w-fit">Yes/No</div>
+              <div className="mt-2 bg-gray-700 p-2 rounded">Authentication Fail</div>
+            </div>
+            <div className=" flex flex-col justify-end">
+
+
+<div className="mt-2 bg-gray-700 p-8 rounded w-fit">Voice Authenticate</div>
+<div className="h-10"> </div>
+</div>
       </div>
 
-      <img
-        className="w-100 h-100 sticky top-0 transition-opacity duration-200"
-        src={imageSrc}
-        alt="current-image"
-      />
+
     </div>
   );
 };
