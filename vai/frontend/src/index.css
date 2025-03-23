@@ -1,0 +1,115 @@
+@import "tailwindcss";
+
+@theme{
+  --font-redhat: "Red Hat Display", sans-serif;
+
+}
+
+.flexCol{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+body{
+  background: #101010;
+}
+
+
+.LoginSignupForm input{
+  border: 1px solid white;
+  margin: 10px 0 15px 0;
+}
+
+input:focus, textarea:focus{
+  outline: none;
+  border: 1px solid #ff9730;
+}
+
+ol li{
+  list-style: decimal inside;
+
+}
+ol li::before {
+  content: "";
+  width: 5px;
+  display: inline-block;
+}
+
+
+@keyframes grow {
+  0% {
+    transform: translateY(5vh)  scale(0.6);
+  }
+  100% {
+    transform: translateY(-30vh) scale(2); 
+  }
+}
+
+.animate-grow {
+  animation: grow 0.5s ease-out forwards;
+
+}
+
+.fade-animation {
+  animation: fadeInOut 2s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+
+.loader {
+  width:200px;
+  height:200px;
+  background:#d9d9d9;
+  border-radius:50%;
+  line-height:200px;
+  text-align:center;
+  color:#ddd;
+  font-size:25px;
+  font-weight:600;
+  text-transform:uppercase;
+  position:relative;
+  overflow:hidden;
+  
+}
+.loader:before {
+  content:"";
+  position:absolute;
+  width:400px;
+  height:400px;
+  background-image: linear-gradient(to bottom left, rgb(255, 94, 0), rgb(255, 187, 0), rgb(255, 119, 0));
+  left:50%;
+  transform:translateX(-50%);
+  border-radius:40%;
+  animation:fill 17s ease-out forwards;
+  z-index:1;
+}
+@keyframes fill {
+  from {
+    top:200px;
+    transform:translateX(-50%) rotate(0deg);
+  }
+  to {
+    top:-50px;
+    transform:translateX(-50%) rotate(360deg);
+  }
+}
+
+/* Add this in your CSS file (App.css or similar) */
+.gradientBlacktoDown {
+  @apply absolute w-full h-full;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 50%, #101010 100%);
+  z-index: 1; /* Ensure it is below the content but above the grid */
+}
+.x-container{
+  @apply px-[10%] my-[50px];
+}

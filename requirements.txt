@@ -1,0 +1,18 @@
+joblib
+librosa
+matplotlib
+numpy
+python_speech_features
+scipy
+sounddevice
+torch
+torchvision
+tqdm
+wavio
+Django
+djangorestframework
+django-cors-headers
+django-filter
+drf-yasg  # For API documentation
+djangorestframework-simplejwt  # For JWT authentication
+
