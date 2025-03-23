@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     # 'corsheaders',
     'api.apps.ApiConfig',
     'users.apps.UsersConfig',
+    'voice'
+    
 ]
 
 MIDDLEWARE = [
