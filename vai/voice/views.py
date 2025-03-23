@@ -7,7 +7,6 @@ from rest_framework.views import APIView
 from rest_framework import generics
 import os
 import logging
-# from register_user import record_audio_for_user  # Importing the record_audio_for_user function
 from voiceauth.gmm import load_features_from_directory, train_gmm, save_gmm_model
 import sounddevice as sd
 import numpy as np
@@ -22,20 +21,25 @@ from .blockchain import Blockchain
 import hashlib
 import time
 from datetime import datetime
-
-
+import json
+import os
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from pydub import AudioSegment
 
 class Audio(APIView):
     """"
-    View to handle audio file uploads.
+    View to handle audio file uploads and recording.
     """ 
     permission_classes = ['AllowAny']
     
+
+
+
     @csrf_exempt
     def save_audio(request):
         if request.method == "POST":
-
-            username = request.user.name
+            username = request.user.name  # Assuming this works in your auth setup
             audio_file = request.FILES.get("audio")
 
             if not username or not audio_file:
@@ -44,13 +48,21 @@ class Audio(APIView):
             user_dir = os.path.join("Data", username)
             os.makedirs(user_dir, exist_ok=True)
 
-            file_path = os.path.join(user_dir, f"sample_{len(os.listdir(user_dir)) + 1}.wav")
-            
-            with open(file_path, "wb") as f:
+            # Save the original file as .webm (assuming browser sends WebM)
+            original_file_path = os.path.join(user_dir, f"sample_{len(os.listdir(user_dir)) + 1}.webm")
+            with open(original_file_path, "wb") as f:
                 for chunk in audio_file.chunks():
                     f.write(chunk)
 
-            return JsonResponse({"message": "Audio saved", "file_path": file_path})
+            # Convert WebM to WAV using pydub
+            wav_file_path = original_file_path.replace(".webm", ".wav")
+            audio = AudioSegment.from_file(original_file_path, format="webm")
+            audio.export(wav_file_path, format="wav")
+
+            # Optional: Remove the original .webm file to save space
+            os.remove(original_file_path)
+
+            return JsonResponse({"message": "Audio saved and converted", "file_path": wav_file_path})
 
         return JsonResponse({"error": "Invalid request"}, status=400)
 
@@ -297,3 +309,118 @@ class Audio(APIView):
                 }, status=500)
         
         return JsonResponse({"error": "Invalid request method"}, status=400)
+
+    @csrf_exempt
+    def record(self, request):
+        """
+        View to handle real-time audio recording from system microphone.
+        First request starts recording, second request stops and saves.
+        """
+        if request.method == "POST":
+            try:
+                username = request.user.name
+                if not username:
+                    return JsonResponse({"error": "Missing username"}, status=400)
+
+                # Recording parameters
+                sample_rate = 44100  # Sample rate in Hz
+                channels = 1  # Mono recording
+
+                # Create user directory if it doesn't exist
+                user_dir = os.path.join("Data", username)
+                os.makedirs(user_dir, exist_ok=True)
+
+                # Generate unique filename with timestamp
+                timestamp = time.strftime("%Y%m%d_%H%M%S")
+                file_path = os.path.join(user_dir, f"recording_{timestamp}.wav")
+                print(f"Recording will be saved to: {file_path}")
+
+                # Check if this is a start or stop request
+                try:
+                    request_data = json.loads(request.body) if request.body else {}
+                    is_start = request_data.get("action") == "start"
+                    print(f"Request action: {'start' if is_start else 'stop'}")
+                except json.JSONDecodeError:
+                    return JsonResponse({"error": "Invalid JSON format"}, status=400)
+                
+                if is_start:
+                    print(f"Starting recording for user {username}...")
+                    
+                    # Start recording in a non-blocking way
+                    recording = sd.InputStream(
+                        samplerate=sample_rate,
+                        channels=channels,
+                        dtype=np.float32,
+                        callback=lambda *args: self._audio_callback(request, *args)
+                    )
+                    recording.start()
+                    
+                    # Store recording state in request session
+                    request.session['recording'] = {
+                        'stream': recording,
+                        'start_time': time.time(),
+                        'audio_data': []
+                    }
+                    
+                    return JsonResponse({
+                        "message": "Recording started",
+                        "timestamp": timestamp
+                    })
+                else:
+                    # Stop recording
+                    if 'recording' not in request.session:
+                        return JsonResponse({
+                            "error": "No active recording found"
+                        }, status=400)
+                    
+                    recording_data = request.session['recording']
+                    recording_data['stream'].stop()
+                    recording_data['stream'].close()
+                    
+                    # Convert recorded data to numpy array
+                    audio_data = np.array(recording_data['audio_data'])
+                    
+                    print(f"Recording finished. Saving to {file_path}")
+                    
+                    # Save the recording as WAV file
+                    wavio.write(file_path, audio_data, sample_rate, sampwidth=2)
+                    
+                    # Clear recording state from session
+                    del request.session['recording']
+                    
+                    print(f"Audio saved successfully to {file_path}")
+
+                    return JsonResponse({
+                        "message": "Audio recorded and saved successfully",
+                        "file_path": file_path,
+                        "duration": time.time() - recording_data['start_time'],
+                        "sample_rate": sample_rate,
+                        "timestamp": timestamp
+                    })
+
+            except Exception as e:
+                print(f"Error during recording: {str(e)}")
+                # Clean up if there's an error
+                if 'recording' in request.session:
+                    try:
+                        request.session['recording']['stream'].stop()
+                        request.session['recording']['stream'].close()
+                        del request.session['recording']
+                    except:
+                        pass
+                return JsonResponse({
+                    "error": "Failed to record audio",
+                    "details": str(e)
+                }, status=500)
+
+        return JsonResponse({"error": "Invalid request method"}, status=400)
+
+    def _audio_callback(self, request, indata, frames, time, status):
+        """
+        Callback function to handle incoming audio data during recording.
+        """
+        if status:
+            print(f"Status: {status}")
+        # Store the audio data in the session
+        if 'recording' in request.session:
+            request.session['recording']['audio_data'].extend(indata[:, 0])
