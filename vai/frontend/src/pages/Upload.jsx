@@ -144,7 +144,7 @@ const handleNextClick = async () => {
 
 
 
-  const handleDoneClick = () => {
+  const handleDoneClick = async () => {
     setDoneClicked(true); // Set doneClicked to true to show the blob and carousel
     let statusMessages = ["Initializing", "Analyzing", "Creating Watermark", "Redirecting"];
     let currentMessageIndex = 0;
@@ -155,11 +155,38 @@ const handleNextClick = async () => {
       if (currentMessageIndex >= statusMessages.length) {
         clearInterval(interval); // Clear the interval after all messages are shown
         setTimeout(() => {
+          // Trigger the server-side watermark creation API
+          createWatermarkOnServer();
+  
+          // Redirect to the dashboard after a short delay
           window.location.href = "/Dashboard"; // Redirect to homepage
         }, 2000); // Delay the redirect to let the user see "Redirecting"
       }
     }, 2500); // Show each message for 2 seconds
-  }; 
+  };
+  
+  const createWatermarkOnServer = async () => {
+    const username = "testuser";  // You can replace this with actual user data
+    try {
+      const response = await fetch('/voice/create-watermark', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username }), // Send the username or any required data
+      });
+  
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Watermark created and stored successfully:", data);
+      } else {
+        console.error("Error creating watermark:", data.error);
+      }
+    } catch (error) {
+      console.error("Error while calling the create watermark API:", error);
+    }
+  };
+  
 
   return (
     <div className='px-[10vw] pt-[10vh]  pb-[5vh] h-screen flex flex-col justify-between text-white'>
@@ -185,7 +212,7 @@ const handleNextClick = async () => {
           )}
 
           {recording && nextCount < 11 && (
-            <p className="text-[22px] font-medium text-[#B7B7B7] text-center mt-[1em]">“The quick brown fox jumps over the lazy dog”</p>
+            <p className="text-[22px] font-medium text-[#B7B7B7] text-center mt-[1em]">"Technology has transformed the way we communicate, learn, and interact with the world. From smartphones to artificial intelligence, it shapes our daily lives and influences our decisions."</p>
           )}
         </div>
 

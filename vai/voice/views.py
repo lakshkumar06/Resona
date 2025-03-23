@@ -23,7 +23,7 @@ import hashlib
 import time
 from datetime import datetime
 
-@csrf_exempt
+
 
 class Audio(APIView):
     """"
@@ -31,6 +31,7 @@ class Audio(APIView):
     """ 
     permission_classes = ['AllowAny']
     
+    @csrf_exempt
     def save_audio(request):
         if request.method == "POST":
 
@@ -73,6 +74,7 @@ class Audio(APIView):
 
         return JsonResponse({"error": "Invalid request"}, status=400)
 
+    @csrf_exempt
     def create_watermark(request):
         """
         View to create a watermark for the audio file and store it in blockchain.
@@ -80,6 +82,7 @@ class Audio(APIView):
         if request.method == "POST":
             username = request.user.name
             audio_directory = os.path.join("Data", username)
+            print(audio_directory)
 
         try:
             # Ensure the directory exists
@@ -138,7 +141,7 @@ class Audio(APIView):
             return JsonResponse({"error": "An error occurred during the sign-up process"}, status=500)
         return JsonResponse({"message": "Watermark created and stored in blockchain successfully"}, status=200)
 
-
+    @csrf_exempt
     def test_watermark(request):
         """
         View to test watermark by checking recorded audio against stored GMM model.

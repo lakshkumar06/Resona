@@ -6,6 +6,7 @@ import Homepage from './pages/Homepage';
 import Transcribe from './pages/Transcribe';
 import Upload from './pages/Upload';
 import Dashboard from './pages/Dashboard';
+import Authenticate from './pages/Authenticate';
 const App = () => {
   return (
     <div className='font-redhat'>
@@ -17,7 +18,7 @@ const App = () => {
           <Route path='/Login' element={<Login/>}/>
           <Route path='/Transcribe' element={<Transcribe/>}/>
           <Route path='/Upload' element={<Upload/>}/>
-
+          <Route path='/Authenticate' element={<Authenticate/>}></Route>
         </Routes>
       </BrowserRouter>
       
