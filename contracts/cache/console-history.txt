@@ -1,0 +1,186 @@
+console.log("Recent events:", events.length);
+const events = await contract.queryFilter("VoiceRegistered", -10000, "latest");
+const contract = new ethers.Contract("0xCBe2685bb3726B6FA0933EcffC24CaC9979Fef43", abi, provider);
+const abi = ["event VoiceRegistered(bytes32 indexed commitment, address indexed owner, string walrusUri, uint256 timestamp)"];
+const provider = new ethers.JsonRpcProvider("https://garfield-testnet.zircuit.com/");
+console.log("Block number:", tx.blockNumber);
+console.log("Transaction confirmed! Hash:", tx.hash);
+await tx.wait();
+console.log("Transaction sent:", tx.hash);
+const tx = await mirror.mirrorVoiceRegistration(testCommitment, testWalrusUri, testTimestamp);
+console.log("Timestamp:", testTimestamp);
+console.log("Walrus URI:", testWalrusUri);
+console.log("Commitment:", testCommitment);
+console.log("Test data:");
+const testTimestamp = Math.floor(Date.now() / 1000);
+const testWalrusUri = "ipfs://test123";
+const testCommitment = "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
+console.log("Contract address:", await mirror.getAddress());
+const mirror = Mirror.attach("0x9798FcBd3e0235E7a90B24a33F9926823efEcC9D");
+const Mirror = await ethers.getContractFactory("VoiceRegistryMirror");
+// Get the contractconst Mirror = await ethers.getContractFactory("VoiceRegistryMirror");const mirror = Mirror.attach("0x9798FcBd3e0235E7a90B24a33F9926823efEcC9D");// Test a mirror callconst testCommitment = "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";const testWalrusUri = "ipfs://test123";const testTimestamp = Math.floor(Date.now() / 1000);const tx = await mirror.mirrorVoiceRegistration(testCommitment, testWalrusUri, testTimestamp);await tx.wait();console.log("Test transaction successful:", tx.hash);
+   console.log(`  Walrus URI: ${parsedLog.args.walrusUri}`)
+   console.log(`  Owner: ${parsedLog.args.owner}`)
+console.log(`  Commitment: ${parsedLog.args.commitment}`)
+   const parsedLog = contract.interface.parseLog(log)
+   const log = receipt.logs[0]
+   console.log('Receipt:', receipt)
+   const receipt = await ethers.provider.getTransactionReceipt("0x1dcf6382fe25c025436f6a14ddc030f8888817be637a620dc935cdab5ab6fb78")
+   const contract = VoiceRegistry.attach("0x52A3B6AcFD2856885C050AC0913b0E67d355e4Be")
+   const VoiceRegistry = await ethers.getContractFactory("VoiceRegistry")
+   const parsedLog = contract.interface.parseLog(log)
+console.log(receipt);
+const receipt = await ethers.provider.getTransactionReceipt("0x1dcf6382fe25c025436f6a14ddc030f8888817be637a620dc935cdab5ab6fb78");
+console.log(tx);
+const tx = await ethers.provider.getTransaction("0x1dcf6382fe25c025436f6a14ddc030f8888817be637a620dc935cdab5ab6fb78");
+.exit
+const voiceData = await walrusClient.readFingerprint(walrusUri)
+const walrusUri = "FZ2-VvWe-v6Btud-lzWAyBf7o8gTTQFvvsTdNLTwvU0"
+// In your frontend or backend, use the Walrus clientconst walrusUri = "FZ2-VvWe-v6Btud-lzWAyBf7o8gTTQFvvsTdNLTwvU0"const voiceData = await walrusClient.readFingerprint(walrusUri)
+clear
+   console.log(`  Timestamp: ${new Date(parsedLog.args.timestamp * 1000)}`)
+   console.log(`  Walrus URI: ${parsedLog.args.walrusUri}`)
+   console.log(`  Owner: ${parsedLog.args.owner}`)
+   console.log(`  Commitment: ${parsedLog.args.commitment}`)
+   console.log('Your Voice Registration:')
+   const parsedLog = contract.interface.parseLog(log)
+   const log = receipt.logs[0]
+   console.log(`  Timestamp: ${new Date(parsedLog.args.timestamp * 1000)}`)
+   console.log(`  Walrus URI: ${parsedLog.args.walrusUri}`)
+   console.log(`  Owner: ${parsedLog.args.owner}`)
+   console.log(`  Commitment: ${parsedLog.args.commitment}`)
+   console.log('Your Voice Registration:')
+   const parsedLog = contract.interface.parseLog(log)
+   const log = receipt.logs[0]
+   console.log('Receipt:', receipt)
+   const receipt = await ethers.provider.getTransactionReceipt("0xe9f104faddb48d2cf85bca7d681d4f6ee48b767cdfbf42e30c81eb4985f0f010")
+   const contract = VoiceRegistry.attach("0xFf3908f88542584CbB685d605c5E4bEafB9fd20F")
+   const VoiceRegistry = await ethers.getContractFactory("VoiceRegistry")
+   const receipt = await ethers.provider.getTransactionReceipt(txHash)
+   const contract = VoiceRegistry.attach(contractAddress)
+   const contractAddress = "0xFf3908f88542584CbB685d605c5E4bEafB9fd20F"
+   const VoiceRegistry = await ethers.getContractFactory("VoiceRegistry")
+   }clear
+     }
+       }
+         console.log('Skipping log:', e.message)
+       } catch (e) {
+         }
+           console.log(`  Timestamp: ${new Date(parsedLog.args.timestamp * 1000)}`)
+           console.log(`  Walrus URI: ${parsedLog.args.walrusUri}`)
+           console.log(`  Owner: ${parsedLog.args.owner}`)
+           console.log(`  Commitment: ${parsedLog.args.commitment}`)
+           console.log('Found registration:')
+         if (parsedLog.name === 'VoiceRegistered') {
+         const parsedLog = contract.interface.parseLog(log)
+       try {
+     for (const log of receipt.logs) {
+     
+     console.log(`Found ${receipt.logs.length} logs`)
+   if (receipt && receipt.logs) {
+   }
+     }
+       }
+         console.log('Skipping log:', e.message)
+       } catch (e) {
+         }
+           console.log(`  Timestamp: ${new Date(parsedLog.args.timestamp * 1000)}`)
+           console.log(`  Walrus URI: ${parsedLog.args.walrusUri}`)
+           console.log(`  Owner: ${parsedLog.args.owner}`)
+           console.log(`  Commitment: ${parsedLog.args.commitment}`)
+           console.log('Found registration:')
+         if (parsedLog.name === 'VoiceRegistered') {
+         const parsedLog = contract.interface.parseLog(log)
+       try {
+     for (const log of receipt.logs) {
+     
+     console.log(`Found ${receipt.logs.length} logs`)
+   if (receipt && receipt.logs) {
+   console.log('Receipt:', receipt)
+   const receipt = await ethers.provider.getTransactionReceipt(txHash)
+}
+  }
+    // Skip logs that can't be parsed
+  } catch (e) {
+    }
+      console.log(`  Timestamp: ${new Date(parsedLog.args.timestamp * 1000)}`)
+      console.log(`  Walrus URI: ${parsedLog.args.walrusUri}`)
+      console.log(`  Owner: ${parsedLog.args.owner}`)
+      console.log(`  Commitment: ${parsedLog.args.commitment}`)
+      console.log('Found registration:')
+    if (parsedLog.name === 'VoiceRegistered') {
+    const parsedLog = contract.interface.parseLog(log)
+  try {
+for (const log of receipt.logs) {
+// Parse logs manually
+const receipt = await ethers.provider.getTransactionReceipt(txHash)
+const txHash = "0xe9f104faddb48d2cf85bca7d681d4f6ee48b767cdfbf42e30c81eb4985f0f010"
+ // Get transaction receipt
+  }
+    // Skip logs that can't be parsed
+  } catch (e) {
+    }
+      console.log(`  Timestamp: ${new Date(parsedLog.args.timestamp * 1000)}`)
+      console.log(`  Walrus URI: ${parsedLog.args.walrusUri}`)
+      console.log(`  Owner: ${parsedLog.args.owner}`)
+      console.log(`  Commitment: ${parsedLog.args.commitment}`)
+      console.log('Found registration:')
+    if (parsedLog.name === 'VoiceRegistered') {
+    const parsedLog = contract.interface.parseLog(log)
+  try {
+for (const log of receipt.logs) {
+// Parse logs manually
+const receipt = await ethers.provider.getTransactionReceipt(txHash)
+const txHash = "0xe9f104faddb48d2cf85bca7d681d4f6ee48b767cdfbf42e30c81eb4985f0f010"
+ // Get transaction receipt
+}
+  console.log('---')
+  console.log(`  Timestamp: ${new Date(event.args.timestamp * 1000)}`)
+  console.log(`  Walrus URI: ${event.args.walrusUri}`)
+  console.log(`  Owner: ${event.args.owner}`)
+  console.log(`  Commitment: ${event.args.commitment}`)
+  console.log(`Voice ${i + 1}:`)
+  const event = events[i]
+for (let i = 0; i < events.length; i++) {
+// Display results
+const events = await contract.queryFilter(filter, fromBlock, latestBlock)
+const filter = contract.filters.VoiceRegistered()
+const fromBlock = latestBlock - 1000 // Last 1000 blocks
+const latestBlock = await ethers.provider.getBlockNumber()
+// Get recent events from the last few blocks
+   }
+     console.log('---')
+     console.log(`  Timestamp: ${new Date(event.args.timestamp * 1000)}`)
+     console.log(`  Walrus URI: ${event.args.walrusUri}`)
+     console.log(`  Owner: ${event.args.owner}`)
+     console.log(`  Commitment: ${event.args.commitment}`)
+     console.log(`Voice ${i + 1}:`)
+     const event = events[i]
+   for (let i = 0; i < events.length; i++) {
+   // Display all registered voices
+   const events = await contract.queryFilter(filter)
+   const filter = contract.filters.VoiceRegistered()
+   // Read all events to see what was registered
+   const contract = VoiceRegistry.attach(contractAddress)
+   const contractAddress = "0xFf3908f88542584CbB685d605c5E4bEafB9fd20F"
+   // Replace with your actual deployed contract address
+   const VoiceRegistry = await ethers.getContractFactory("VoiceRegistry")
+ // Get the contract factory
+     console.log('---')
+     console.log(`  Timestamp: ${new Date(event.args.timestamp * 1000)}`)
+     console.log(`  Walrus URI: ${event.args.walrusUri}`)
+     console.log(`  Owner: ${event.args.owner}`)
+     console.log(`  Commitment: ${event.args.commitment}`)
+     console.log(`Voice ${i + 1}:`)
+     const event = events[i]
+   for (let i = 0; i < events.length; i++) {
+   // Display all registered voices
+   const events = await contract.queryFilter(filter)
+   const filter = contract.filters.VoiceRegistered()
+   // Read all events to see what was registered
+   const contract = VoiceRegistry.attach(contractAddress)
+   const contractAddress = "YOUR_DEPLOYED_CONTRACT_ADDRESS"
+   // Replace with your actual deployed contract address
+   const VoiceRegistry = await ethers.getContractFactory("VoiceRegistry")
+   // Get the contract factory
+npx hardhat run scripts/deploy.js --network zircuit

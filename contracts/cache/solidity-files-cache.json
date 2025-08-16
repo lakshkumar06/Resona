@@ -1,0 +1,77 @@
+{
+  "_format": "hh-sol-cache-2",
+  "files": {
+    "/Users/lakshkumar/Desktop/Resona/contracts/contracts/VoiceRegistry.sol": {
+      "lastModificationDate": 1755036136306,
+      "contentHash": "ad1e3fac87321930ed673be589079000",
+      "sourceName": "contracts/VoiceRegistry.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "VoiceRegistry"
+      ]
+    },
+    "/Users/lakshkumar/Desktop/Resona/contracts/contracts/VoiceRegistryMirror.sol": {
+      "lastModificationDate": 1755023397582,
+      "contentHash": "f9e75027965eb62a35fd7381cbac339c",
+      "sourceName": "contracts/VoiceRegistryMirror.sol",
+      "solcConfig": {
+        "version": "0.8.20",
+        "settings": {
+          "evmVersion": "paris",
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [],
+      "versionPragmas": [
+        "^0.8.20"
+      ],
+      "artifacts": [
+        "VoiceRegistryMirror"
+      ]
+    }
+  }
+}

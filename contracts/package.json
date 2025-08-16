@@ -1,0 +1,21 @@
+{
+  "name": "voice-registry-contracts",
+  "version": "1.0.0",
+  "description": "Voice Registry smart contracts for Zircuit deployment",
+  "main": "index.js",
+  "scripts": {
+    "compile": "npx hardhat compile",
+    "deploy": "npx hardhat run scripts/deploy.js --network zircuit",
+    "deploy:mirror": "npx hardhat run scripts/deployMirror.js --network polygonAmoy",
+    "relay": "node scripts/relay.js",
+    "test": "npx hardhat test"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.1",
+    "ethers": "^6.8.0"
+  }
+}
