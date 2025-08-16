@@ -4,8 +4,26 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(),
-        tailwindcss(),
-
+  plugins: [
+    react(),
+    tailwindcss(),
   ],
+  server: {
+    port: 5173,
+    host: true
+  },
+  optimizeDeps: {
+    exclude: ['@mysten/walrus-wasm']
+  },
+  build: {
+    target: 'esnext',
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          walrus: ['@mysten/walrus', '@mysten/walrus-wasm']
+        }
+      }
+    }
+  },
+  assetsInclude: ['**/*.wasm']
 })
