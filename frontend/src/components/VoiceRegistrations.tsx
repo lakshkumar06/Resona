@@ -23,7 +23,7 @@ const VoiceRegistrations: React.FC = () => {
 
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-md p-4">
+      <div className="bg-red-50 border border-red-200 rounded-md pt-40">
         <div className="flex">
           <div className="text-red-600">
             <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -49,7 +49,7 @@ const VoiceRegistrations: React.FC = () => {
     );
   }
 
-  const voiceRegistrations = data?.voiceRegistereds || [];
+  const voiceRegistrations = data?.voices || [];
 
   const formatTimestamp = (timestamp: string) => {
     return new Date(parseInt(timestamp) * 1000).toLocaleString();
@@ -99,7 +99,7 @@ const VoiceRegistrations: React.FC = () => {
                           Owner: {truncateAddress(registration.owner)}
                         </p>
                         <p className="text-sm text-gray-500 truncate">
-                          Commitment: {truncateCommitment(registration.commitment)}
+                          Commitment: {truncateCommitment(registration.id)}
                         </p>
                         <p className="text-sm text-gray-500 truncate">
                           Walrus URI: {registration.walrusUri}

@@ -5,6 +5,7 @@ import { GET_LATEST_VOICE_REGISTRATIONS } from '../lib/queries';
 import type { VoiceRegistrationsData, VoiceRegistrationsVariables } from '../types/subgraph';
 import * as d3 from "d3";
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { logAuthenticationAttempt, type AuthAttemptData } from '../utils/voiceRegistry';
 
 // Type declarations for Speech Recognition API
 declare global {
@@ -106,6 +107,20 @@ const AuthenticateVoice: React.FC<AuthenticateVoiceProps> = ({
       pollInterval: 30000, // Poll every 30 seconds for updates
     }
   );
+
+  // Debug logging for subgraph data
+  useEffect(() => {
+    if (subgraphData) {
+      console.log('🔍 Subgraph data received:', subgraphData);
+      console.log('📊 Total voices:', subgraphData.voices?.length || 0);
+      if (subgraphData.voices && subgraphData.voices.length > 0) {
+        console.log('📋 Sample voice registration:', subgraphData.voices[0]);
+      }
+    }
+    if (subgraphError) {
+      console.error('❌ Subgraph error:', subgraphError);
+    }
+  }, [subgraphData, subgraphError]);
 
   // Generate a dynamic blob shape with smooth curves
   const generateBlobPath = (level: number): string => {
@@ -227,7 +242,7 @@ const AuthenticateVoice: React.FC<AuthenticateVoiceProps> = ({
   const generateRandomSentence = () => {
     const randomIndex = Math.floor(Math.random() * randomSentences.length);
     const selectedSentence = randomSentences[randomIndex];
-    console.log('🎯 Generated random sentence for validation:', selectedSentence);
+    console.log(' Generated random sentence for validation:', selectedSentence);
     setWordValidation(prev => ({
       ...prev,
       sentence: selectedSentence,
@@ -296,7 +311,7 @@ const AuthenticateVoice: React.FC<AuthenticateVoiceProps> = ({
     const accuracy = calculateAccuracy(wordValidation.spokenSentence, wordValidation.sentence);
     const isValid = accuracy >= 70; // 70% accuracy threshold
     
-    console.log(`🎯 Validation result: ${isValid ? 'PASSED' : 'FAILED'} (${accuracy.toFixed(1)}% accuracy)`);
+    console.log(` Validation result: ${isValid ? 'PASSED' : 'FAILED'} (${accuracy.toFixed(1)}% accuracy)`);
     
     setWordValidation(prev => ({
       ...prev,
@@ -495,7 +510,7 @@ const AuthenticateVoice: React.FC<AuthenticateVoiceProps> = ({
            const proofDetails = response.proof_details || {};
 
            console.log(`✅ VOICE MATCH DETECTED for wallet ${targetWalletAddress} using REAL ZK proof!`);
-           console.log(`🎯 ZK Proof details:`, {
+           console.log(` ZK Proof details:`, {
              similarity: response.similarity,
              threshold: response.threshold,
              blobId: matchedBlobId,
@@ -510,6 +525,9 @@ const AuthenticateVoice: React.FC<AuthenticateVoiceProps> = ({
            if (proofDetails.verification_passed !== undefined) {
              messageText += `\n🔐 ZK Proof Verification: ${proofDetails.verification_passed ? '✅ PASSED' : '❌ FAILED'}`;
            }
+           
+           messageText += `\n🔗 Authentication attempt logged on blockchain`;
+           messageText += `\n📊 Similarity: ${(response.similarity * 100).toFixed(2)}% | Threshold: ${(response.threshold * 100).toFixed(2)}%`;
 
            setMessage({
              text: messageText,
@@ -542,6 +560,9 @@ const AuthenticateVoice: React.FC<AuthenticateVoiceProps> = ({
             if (proofDetails.verification_passed !== undefined) {
               messageText += `\n🔐 ZK Proof Verification: ${proofDetails.verification_passed ? '✅ PASSED' : '❌ FAILED'}`;
             }
+            
+            messageText += `\n🔗 Authentication attempt logged on blockchain`;
+            messageText += `\n📊 Similarity: ${(response.similarity * 100).toFixed(2)}% | Threshold: ${(response.threshold * 100).toFixed(2)}%`;
             
             setMessage({ 
               text: messageText, 

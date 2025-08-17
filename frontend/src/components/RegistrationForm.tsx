@@ -179,7 +179,7 @@ const RegistrationForm: React.FC = () => {
   const generateRandomSentence = () => {
     const randomIndex = Math.floor(Math.random() * randomSentences.length);
     const selectedSentence = randomSentences[randomIndex];
-    console.log('🎯 Generated random sentence for validation:', selectedSentence);
+    console.log(' Generated random sentence for validation:', selectedSentence);
     setWordValidation(prev => ({
       ...prev,
       sentence: selectedSentence,
@@ -248,7 +248,7 @@ const RegistrationForm: React.FC = () => {
     const accuracy = calculateAccuracy(wordValidation.spokenSentence, wordValidation.sentence);
     const isValid = accuracy >= 70; // 70% accuracy threshold
     
-    console.log(`🎯 Validation result: ${isValid ? 'PASSED' : 'FAILED'} (${accuracy.toFixed(1)}% accuracy)`);
+    console.log(` Validation result: ${isValid ? 'PASSED' : 'FAILED'} (${accuracy.toFixed(1)}% accuracy)`);
     
     setWordValidation(prev => ({
       ...prev,
@@ -699,7 +699,7 @@ const RegistrationForm: React.FC = () => {
                 {/* Sentence display below blob during recording */}
                 {wordValidation.sentence && (
                   <div className="text-center mb-4">
-                    <p className="text-orange-400 text-sm font-medium mb-2">🎯 Speak this sentence:</p>
+                    <p className="text-orange-400 text-sm font-medium mb-2"> Speak this sentence:</p>
                     <p className="text-white text-lg font-semibold leading-relaxed">"{wordValidation.sentence}"</p>
                   </div>
                 )}
@@ -720,7 +720,7 @@ const RegistrationForm: React.FC = () => {
                 {/* Sentence display above submit button */}
                 {wordValidation.sentence && (
                   <div className="text-center mb-4">
-                    <p className="text-orange-400 text-sm font-medium mb-2">🎯 Speak this sentence:</p>
+                    <p className="text-orange-400 text-sm font-medium mb-2"> Speak this sentence:</p>
                     <p className="text-white text-lg font-semibold leading-relaxed">"{wordValidation.sentence}"</p>
                     {wordValidation.spokenSentence && (
                       <p className="text-gray-300 text-sm mt-2">
@@ -873,7 +873,7 @@ const RegistrationForm: React.FC = () => {
             
             {submissionResult.success && submissionResult.details && (
               <div className="bg-gray-100 rounded-lg p-4 mb-6 text-left">
-                <h4 className="font-semibold mb-2">🎯 Registration Details:</h4>
+                <h4 className="font-semibold mb-2"> Registration Details:</h4>
                 <div className="space-y-2 text-sm">
                   <div><span className="font-medium">Transaction Hash:</span> <span className="font-mono text-xs break-all">{submissionResult.details.hash}</span></div>
                   <div><span className="font-medium">Walrus URI:</span> <span className="font-mono text-xs break-all">{submissionResult.details.walrusUri}</span></div>
