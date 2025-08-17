@@ -27,10 +27,11 @@ export class RealZKProofService {
   private witnessCalculatorPath: string;
 
   constructor() {
-    this.wasmPath = path.join(__dirname, '../zkproofs/multiplier2.wasm');
-    this.zkeyPath = path.join(__dirname, '../zkproofs/multiplier2_0001.zkey');
-    this.verificationKeyPath = path.join(__dirname, '../zkproofs/verification_key.json');
-    this.witnessCalculatorPath = path.join(__dirname, '../zkproofs/witness_calculator.js');
+    // Updated paths to point to the correct compiled circuit files
+    this.wasmPath = path.join(__dirname, '../zkproofs/outputs/multiplier2_js/multiplier2.wasm');
+    this.zkeyPath = path.join(__dirname, '../zkproofs/outputs/multiplier2_0001.zkey');
+    this.verificationKeyPath = path.join(__dirname, '../zkproofs/outputs/verification_key.json');
+    this.witnessCalculatorPath = path.join(__dirname, '../zkproofs/outputs/multiplier2_js/witness_calculator.js');
   }
 
   async generateProof(comparison: EmbeddingComparison): Promise<ZKProofResult> {
@@ -38,7 +39,7 @@ export class RealZKProofService {
       console.log('🔐 Starting real ZK proof generation with Circom circuit...');
       console.log(`📊 Input embedding A length: ${comparison.embeddingA.length}`);
       console.log(`📊 Input embedding B length: ${comparison.embeddingB.length}`);
-      console.log(`🎯 Threshold: ${comparison.threshold}`);
+      console.log(` Threshold: ${comparison.threshold}`);
 
       // Check if files exist
       if (!fs.existsSync(this.wasmPath)) {
@@ -46,6 +47,9 @@ export class RealZKProofService {
       }
       if (!fs.existsSync(this.zkeyPath)) {
         throw new Error(`ZKey file not found: ${this.zkeyPath}`);
+      }
+      if (!fs.existsSync(this.witnessCalculatorPath)) {
+        throw new Error(`Witness calculator not found: ${this.witnessCalculatorPath}`);
       }
 
       // Prepare input for the circuit - convert floating point to integers
@@ -55,18 +59,24 @@ export class RealZKProofService {
       const scaledEmbeddingA = comparison.embeddingA.map(x => Math.round(x * scaleFactor));
       const scaledEmbeddingB = comparison.embeddingB.map(x => Math.round(x * scaleFactor));
       
+      // Scale threshold for circuit (circuit expects threshold scaled by 10000)
+      const scaledThreshold = Math.round(comparison.threshold * 10000);
+      
       const circuitInput = {
         a: scaledEmbeddingA,
-        b: scaledEmbeddingB
+        b: scaledEmbeddingB,
+        threshold: scaledThreshold
       };
       
-      console.log(`🔢 Scaled embeddings for circuit input (scale factor: ${scaleFactor})`);
+      console.log(`🔢 Scaled inputs for circuit:`);
+      console.log(`   Embedding scale factor: ${scaleFactor}`);
       console.log(`   Sample A values: [${scaledEmbeddingA.slice(0, 3).join(', ')}...]`);
       console.log(`   Sample B values: [${scaledEmbeddingB.slice(0, 3).join(', ')}...]`);
+      console.log(`   Threshold: ${scaledThreshold} (${comparison.threshold * 100}%)`);
 
       console.log('🔐 Generating witness...');
       
-      // Load the witness calculator
+      // Load the witness calculator module
       const witnessCalculatorModule = require(this.witnessCalculatorPath);
       
       // Read WASM file

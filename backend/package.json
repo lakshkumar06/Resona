@@ -8,7 +8,8 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "ts-node src/testZkProof.ts",
-    "test:zk": "ts-node src/testZkProof.ts"
+    "test:zk": "ts-node src/testZkProof.ts",
+    "test:real-zk": "ts-node src/testRealZkProof.ts"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,7 @@
     "@mysten/walrus": "^0.6.1",
     "cors": "^2.8.5",
     "dotenv": "^17.2.0",
+    "ethers": "^6.15.0",
     "express": "^5.1.0",
     "snarkjs": "^0.7.5"
   },

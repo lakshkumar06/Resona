@@ -8,6 +8,7 @@ import { WalrusClient } from '@mysten/walrus';
 import { Ed25519Keypair } from '@mysten/sui/keypairs/ed25519';
 import { voiceProver, type ZKProofResult } from './zkProof';
 import { realZkProofService } from './realZkProofService';
+import { logAuthenticationAttemptOnChain, logBasicAuthAttempt, type AuthAttemptData } from './authLogger';
 
 // Load environment variables
 dotenv.config();
@@ -498,7 +499,7 @@ app.post('/api/voice/authenticate', async (req, res) => {
           console.log(`      Wallet: ${matchedWallet}`);
           console.log(`      Blob ID: ${matchedBlobId}`);
           console.log(`      Similarity: ${(proof.similarity * 100).toFixed(2)}%`);
-          console.log(`   🎯 Stopping search - match found at position ${i + 1}/${storedEmbeddings.length}`);
+          console.log(`    Stopping search - match found at position ${i + 1}/${storedEmbeddings.length}`);
           
           // Return immediately for optimal performance
           return res.json({
@@ -546,6 +547,8 @@ app.post('/api/voice/authenticate-wallet', async (req, res) => {
   try {
     const { inputEmbedding, walletAddress, subgraphData } = req.body;
     
+    console.log(`🔍 Request body:`, JSON.stringify(req.body, null, 2));
+    
     if (!inputEmbedding || !Array.isArray(inputEmbedding)) {
       return res.status(400).json({ 
         error: 'inputEmbedding is required and must be an array' 
@@ -572,13 +575,18 @@ app.post('/api/voice/authenticate-wallet', async (req, res) => {
       // First try to get embeddings from subgraph data if provided
       let walletEmbeddings = [];
       
-      if (subgraphData && subgraphData.voiceRegistereds && Array.isArray(subgraphData.voiceRegistereds)) {
+      console.log(`🔍 Subgraph data received:`, JSON.stringify(subgraphData, null, 2));
+      
+      if (subgraphData && subgraphData.voices && Array.isArray(subgraphData.voices)) {
         console.log(`Checking subgraph data for wallet ${walletAddress}...`);
+        console.log(`Total voices in subgraph: ${subgraphData.voices.length}`);
         
         // Filter registrations for this specific wallet
-        const walletRegistrations = subgraphData.voiceRegistereds.filter(
+        const walletRegistrations = subgraphData.voices.filter(
           (reg: any) => reg.owner && reg.owner.toLowerCase() === walletAddress.toLowerCase()
         );
+        
+        console.log(`Filtered registrations for wallet ${walletAddress}:`, walletRegistrations);
         
         if (walletRegistrations.length > 0) {
           console.log(`Found ${walletRegistrations.length} voice registrations for wallet ${walletAddress}`);
@@ -586,10 +594,10 @@ app.post('/api/voice/authenticate-wallet', async (req, res) => {
           // Process each registration and extract embeddings from Walrus
           for (const registration of walletRegistrations) {
             try {
-              const { walrusUri, commitment, timestamp, blockNumber } = registration;
+              const { walrusUri, id, timestamp, blockNumber } = registration;
               
               if (!walrusUri) {
-                console.warn(`Registration ${commitment} missing walrusUri`);
+                console.warn(`Registration ${id} missing walrusUri`);
                 continue;
               }
               
@@ -600,7 +608,7 @@ app.post('/api/voice/authenticate-wallet', async (req, res) => {
               }
               
               if (!blobId || blobId.length < 10) {
-                console.warn(`Invalid blob ID for registration ${commitment}: ${blobId}`);
+                console.warn(`Invalid blob ID for registration ${id}: ${blobId}`);
                 continue;
               }
               
@@ -619,27 +627,27 @@ app.post('/api/voice/authenticate-wallet', async (req, res) => {
                       embedding: fingerprintData.embedding,
                       model: fingerprintData.model || "ecapa-tdnn",
                       timestamp: fingerprintData.timestamp || parseInt(timestamp) * 1000,
-                      metadata: {
-                        source: "subgraph_specific_wallet",
-                        commitment,
-                        blockNumber: parseInt(blockNumber),
-                        walrusUri
-                      }
+                                        metadata: {
+                    source: "subgraph_specific_wallet",
+                    commitment: id,
+                    blockNumber: parseInt(blockNumber),
+                    walrusUri
+                  }
                     });
                     
                     console.log(`✅ Retrieved embedding for wallet ${walletAddress} from blob ${blobId}`);
                   } else {
-                    console.warn(`Blob ${blobId} found but no valid embedding data for registration ${commitment}`);
+                    console.warn(`Blob ${blobId} found but no valid embedding data for registration ${id}`);
                   }
                 }
               } catch (blobError: any) {
                 // Handle specific blob errors gracefully
                 if (blobError.message && blobError.message.includes('not found')) {
-                  console.warn(`Blob ${blobId} not found in Walrus (likely deleted) for registration ${commitment}`);
+                  console.warn(`Blob ${blobId} not found in Walrus (likely deleted) for registration ${id}`);
                 } else if (blobError.message && blobError.message.includes('timeout')) {
-                  console.warn(`Timeout reading blob ${blobId} for registration ${commitment}`);
+                  console.warn(`Timeout reading blob ${blobId} for registration ${id}`);
                 } else {
-                  console.warn(`Failed to read blob ${blobId} for registration ${commitment}:`, blobError.message || blobError);
+                  console.warn(`Failed to read blob ${blobId} for registration ${id}:`, blobError.message || blobError);
                 }
                 // Continue processing other registrations
               }
@@ -654,6 +662,7 @@ app.post('/api/voice/authenticate-wallet', async (req, res) => {
       if (walletEmbeddings.length === 0) {
         console.log(`No embeddings found in subgraph for wallet ${walletAddress}, checking local mappings...`);
         const mappings = readMappings();
+        console.log(`Local mappings:`, mappings);
         
         // Check if this wallet has any registrations in local mappings
         if (mappings[walletAddress]) {
@@ -691,6 +700,47 @@ app.post('/api/voice/authenticate-wallet', async (req, res) => {
             } else {
               console.warn(`Failed to read blob ${blobId} for wallet ${walletAddress}:`, blobError.message || blobError);
             }
+          }
+        }
+        
+        // Additional fallback: Check voice-server embeddings directory
+        if (walletEmbeddings.length === 0) {
+          console.log(`No embeddings found in local mappings, checking voice-server embeddings directory...`);
+          const embeddingsDir = path.join(__dirname, '../../voice-server/embeddings');
+          
+          if (fs.existsSync(embeddingsDir)) {
+            const embeddingFile = path.join(embeddingsDir, `${walletAddress}.json`);
+            
+            if (fs.existsSync(embeddingFile)) {
+              try {
+                const data = fs.readFileSync(embeddingFile, 'utf8');
+                const embeddingData = JSON.parse(data);
+                
+                if (embeddingData.embedding && Array.isArray(embeddingData.embedding) && embeddingData.embedding.length > 0) {
+                  walletEmbeddings.push({
+                    walletAddress,
+                    blobId: `local_${walletAddress}`,
+                    embedding: embeddingData.embedding,
+                    model: embeddingData.model || "ecapa-tdnn",
+                    timestamp: Date.now(),
+                    metadata: {
+                      source: "voice_server_embeddings",
+                      file: embeddingFile
+                    }
+                  });
+                  
+                  console.log(`✅ Retrieved embedding for wallet ${walletAddress} from voice-server embeddings file`);
+                } else {
+                  console.warn(`Embedding file found but no valid embedding data for wallet ${walletAddress}`);
+                }
+              } catch (error) {
+                console.error(`Error reading embedding file ${embeddingFile}:`, error);
+              }
+            } else {
+              console.log(`No embedding file found for wallet ${walletAddress} in voice-server directory`);
+            }
+          } else {
+            console.log(`Voice-server embeddings directory not found: ${embeddingsDir}`);
           }
         }
       }
@@ -750,6 +800,27 @@ app.post('/api/voice/authenticate-wallet', async (req, res) => {
           console.log(`   Similarity: ${(zkProofResult.publicSignals.similarity * 100).toFixed(2)}%`);
           console.log(`   Circuit assertion failed - this proves similarity >= threshold`);
           
+          // Log authentication attempt on blockchain
+          console.log('🔗 Logging successful authentication attempt on blockchain...');
+          try {
+            const authLogResult = await logAuthenticationAttemptOnChain({
+              attemptedBy: walletAddress, // Use the target wallet address as the authenticator
+              targetOwner: walletAddress,
+              targetEmbedding: storedData.embedding,
+              success: true,
+              similarity: zkProofResult.publicSignals.similarity,
+              threshold: 0.75,
+              metadata: {
+                blobId: storedData.blobId,
+                verificationMethod: 'real_zk_proof_circom',
+                circuitAssertionFailed: true
+              }
+            });
+            console.log(`📊 Blockchain logging result:`, authLogResult);
+          } catch (logError) {
+            console.error('❌ Failed to log authentication attempt on blockchain:', logError);
+          }
+          
           return res.json({
             authenticated: true,
             message: `✅ WALLET CONNECTED: Voice successfully matched to wallet ${walletAddress}! (REAL ZK Circuit Verified)`,
@@ -776,6 +847,27 @@ app.post('/api/voice/authenticate-wallet', async (req, res) => {
           console.log(`   Blob ID: ${storedData.blobId}`);
           console.log(`   Similarity: ${(zkProofResult.publicSignals.similarity * 100).toFixed(2)}%`);
           console.log(`   Circuit generated valid proof - this proves similarity < threshold`);
+          
+          // Log failed authentication attempt on blockchain
+          console.log('🔗 Logging failed authentication attempt on blockchain...');
+          try {
+            const authLogResult = await logAuthenticationAttemptOnChain({
+              attemptedBy: walletAddress, // Use the target wallet address as the authenticator
+              targetOwner: walletAddress,
+              targetEmbedding: storedData.embedding,
+              success: false,
+              similarity: zkProofResult.publicSignals.similarity,
+              threshold: 0.75,
+              metadata: {
+                blobId: storedData.blobId,
+                verificationMethod: 'real_zk_proof_circom',
+                zkProofGenerated: true
+              }
+            });
+            console.log(`📊 Blockchain logging result:`, authLogResult);
+          } catch (logError) {
+            console.error('❌ Failed to log authentication attempt on blockchain:', logError);
+          }
           
           res.json({
             authenticated: false,

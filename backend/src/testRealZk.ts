@@ -64,7 +64,7 @@ async function testRealZkProof() {
       console.log(`   Circuit assertion failed: ${result2.publicSignals!.circuit_assertion_failed ? 'YES' : 'NO'}`);
       
       if (result2.publicSignals!.circuit_assertion_failed) {
-        console.log('🎯 SUCCESS: Circuit assertion failed as expected (embeddings match!)');
+        console.log(' SUCCESS: Circuit assertion failed as expected (embeddings match!)');
       } else {
         console.log('⚠️  Unexpected: Circuit assertion did not fail (embeddings might not match)');
       }
