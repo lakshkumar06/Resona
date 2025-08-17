@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/lakshkumar/Desktop/Resona/contracts/contracts/VoiceRegistry.sol": {
-      "lastModificationDate": 1755036136306,
-      "contentHash": "ad1e3fac87321930ed673be589079000",
+      "lastModificationDate": 1755379709144,
+      "contentHash": "3af7aac7101d310208159539159bcb90",
       "sourceName": "contracts/VoiceRegistry.sol",
       "solcConfig": {
         "version": "0.8.20",
@@ -38,8 +38,8 @@
       ]
     },
     "/Users/lakshkumar/Desktop/Resona/contracts/contracts/VoiceRegistryMirror.sol": {
-      "lastModificationDate": 1755023397582,
-      "contentHash": "f9e75027965eb62a35fd7381cbac339c",
+      "lastModificationDate": 1755379749033,
+      "contentHash": "0d34cefff7347092c0fbd7eef9bcd1d4",
       "sourceName": "contracts/VoiceRegistryMirror.sol",
       "solcConfig": {
         "version": "0.8.20",

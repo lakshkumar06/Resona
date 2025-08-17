@@ -1,6 +1,6 @@
 console.log("Recent events:", events.length);
 const events = await contract.queryFilter("VoiceRegistered", -10000, "latest");
-const contract = new ethers.Contract("0xCBe2685bb3726B6FA0933EcffC24CaC9979Fef43", abi, provider);
+const contract = new ethers.Contract("0xAC3a3123770346d8d4c186d892d81b4522b1D512", abi, provider);
 const abi = ["event VoiceRegistered(bytes32 indexed commitment, address indexed owner, string walrusUri, uint256 timestamp)"];
 const provider = new ethers.JsonRpcProvider("https://garfield-testnet.zircuit.com/");
 console.log("Block number:", tx.blockNumber);
@@ -16,9 +16,9 @@ const testTimestamp = Math.floor(Date.now() / 1000);
 const testWalrusUri = "ipfs://test123";
 const testCommitment = "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";
 console.log("Contract address:", await mirror.getAddress());
-const mirror = Mirror.attach("0x9798FcBd3e0235E7a90B24a33F9926823efEcC9D");
+const mirror = Mirror.attach("0x6681c8A592485a495b6A26c9C2E752f194b5D6D0");
 const Mirror = await ethers.getContractFactory("VoiceRegistryMirror");
-// Get the contractconst Mirror = await ethers.getContractFactory("VoiceRegistryMirror");const mirror = Mirror.attach("0x9798FcBd3e0235E7a90B24a33F9926823efEcC9D");// Test a mirror callconst testCommitment = "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";const testWalrusUri = "ipfs://test123";const testTimestamp = Math.floor(Date.now() / 1000);const tx = await mirror.mirrorVoiceRegistration(testCommitment, testWalrusUri, testTimestamp);await tx.wait();console.log("Test transaction successful:", tx.hash);
+// Get the contractconst Mirror = await ethers.getContractFactory("VoiceRegistryMirror");const mirror = Mirror.attach("0x6681c8A592485a495b6A26c9C2E752f194b5D6D0");// Test a mirror callconst testCommitment = "0x1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef";const testWalrusUri = "ipfs://test123";const testTimestamp = Math.floor(Date.now() / 1000);const tx = await mirror.mirrorVoiceRegistration(testCommitment, testWalrusUri, testTimestamp);await tx.wait();console.log("Test transaction successful:", tx.hash);
    console.log(`  Walrus URI: ${parsedLog.args.walrusUri}`)
    console.log(`  Owner: ${parsedLog.args.owner}`)
 console.log(`  Commitment: ${parsedLog.args.commitment}`)
