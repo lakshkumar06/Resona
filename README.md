@@ -1,5 +1,7 @@
 # Resona: Voice Authentication on Zircuit
 
+![Resona Logo](images/logo.png)
+
 ## The Problem
 
 Voice authentication has long been plagued by the fundamental challenge of encoding complex, high-dimensional voice embeddings into blockchain-verifiable commitments. Traditional approaches struggle with the sheer volume of information contained in voice biometrics - a single voice sample can contain thousands of floating-point values representing pitch, timbre, cadence, and unique vocal characteristics. The ECAPA-TDNN (Emphasized Channel Attention, Propagation and Aggregation Time-Delay Neural Network) model generates these rich 192-dimensional embeddings, but existing blockchain solutions fail to efficiently verify voice similarity without compromising privacy or requiring massive computational overhead. The long-standing problem was that voice could not be decoded because of so much information and complex vector embeddings - we are solving that using ECAPA-TDNN, which captures the subtle nuances of human speech that make each voice unique, from the micro-variations in pronunciation to the distinctive rhythm patterns that define individual speaking styles.
@@ -7,6 +9,8 @@ Voice authentication has long been plagued by the fundamental challenge of encod
 ## Our Solution
 
 Resona solves this by deploying a novel zero-knowledge proof system on Zircuit that can verify voice similarity while maintaining complete privacy. Our smart contracts store only cryptographic commitments of voice embeddings, while the ZK-proof system mathematically proves similarity without revealing the actual voice data. This breakthrough enables secure, decentralized voice authentication that scales to millions of users while preserving the mathematical precision of ECAPA-TDNN embeddings.
+
+![User Flow Diagram](images/userflow.png)
 
 ## Why Zircuit
 
