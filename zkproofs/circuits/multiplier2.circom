@@ -6,9 +6,10 @@ template Multiplier2(n) {
     // Inputs
     signal input a[n];
     signal input b[n];
+    signal input threshold; // Dynamic threshold input (scaled by 10000, e.g., 7500 = 75%)
 
     signal thresholdSquared;
-    thresholdSquared <== 5625; // 0.75² * 10000
+    thresholdSquared <== threshold * threshold; // Square the input threshold
 
     // Loop to compute dot product and magnitudes
     signal aTimesB[n];
