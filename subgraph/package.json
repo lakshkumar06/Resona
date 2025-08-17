@@ -1,0 +1,20 @@
+{
+  "name": "voice-registry-analytics-subgraph",
+  "version": "1.0.0",
+  "description": "Subgraph for voice registry with threshold analytics",
+  "main": "index.js",
+  "scripts": {
+    "codegen": "graph codegen",
+    "build": "graph build",
+    "deploy": "graph deploy --studio resona",
+    "create": "graph create --studio resona",
+    "deploy-local": "graph deploy --node http://localhost:8020 --ipfs http://localhost:5001 resona"
+  },
+  "dependencies": {
+    "@graphprotocol/graph-cli": "^0.67.0",
+    "@graphprotocol/graph-ts": "^0.31.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

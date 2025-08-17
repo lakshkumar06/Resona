@@ -1,0 +1,33 @@
+specVersion: 0.0.5
+schema:
+  file: schema.graphql
+features:
+  - fullTextSearch
+dataSources:
+  - kind: ethereum
+    name: VoiceRegistryMirror
+    network: polygon-amoy
+    source:
+      address: "0x6681c8A592485a495b6A26c9C2E752f194b5D6D0"
+      abi: VoiceRegistryMirror
+      startBlock: 0
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - Voice
+        - AuthenticationAttempt
+        - ThresholdAnalytics
+        - SystemAnalytics
+      abis:
+        - name: VoiceRegistryMirror
+          file: VoiceRegistryMirror/abis/VoiceRegistryMirror.json
+      eventHandlers:
+        - event: VoiceRegistered(indexed bytes32,indexed address,string,uint256)
+          handler: handleVoiceRegistered
+        - event: AuthenticationAttempt(indexed uint256,indexed address,indexed
+            address,bytes32,bool,uint256,uint256,uint256,string)
+          handler: handleAuthenticationAttempt
+      file: VoiceRegistryMirror/VoiceRegistryMirror.wasm
+templates: []

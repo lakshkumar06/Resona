@@ -1,0 +1,79 @@
+type Voice @entity {
+  id: ID! # commitment hash
+  owner: Bytes! # address
+  walrusUri: String!
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+  
+  # Derived relationships
+  authAttempts: [AuthenticationAttempt!]! @derivedFrom(field: "targetVoice")
+  thresholdAnalytics: ThresholdAnalytics @derivedFrom(field: "voice")
+}
+
+type AuthenticationAttempt @entity {
+  id: ID! # attemptId
+  attemptedBy: Bytes!
+  targetOwner: Bytes!
+  targetVoice: Voice!
+  targetCommitment: Bytes!
+  success: Boolean!
+  similarity: BigInt! # scaled by 10000
+  threshold: BigInt! # scaled by 10000
+  timestamp: BigInt!
+  blockNumber: BigInt!
+  transactionHash: Bytes!
+  metadata: String!
+  
+  # Computed analytics fields
+  isAboveOptimalThreshold: Boolean!
+  riskScore: BigInt! # 0-10000 risk assessment
+}
+
+# Per-voice threshold analytics
+type ThresholdAnalytics @entity {
+  id: ID! # voice commitment hash
+  voice: Voice!
+  
+  # Statistics
+  totalAttempts: BigInt!
+  successfulAttempts: BigInt!
+  failedAttempts: BigInt!
+  
+  # Threshold calculations
+  currentOptimalThreshold: BigInt! # scaled by 10000
+  averageSuccessfulSimilarity: BigInt!
+  averageFailedSimilarity: BigInt!
+  securityScore: BigInt! # 0-10000
+  
+  # Last update
+  lastCalculated: BigInt!
+  recommendedThreshold: BigInt!
+}
+
+# System-wide analytics
+type SystemAnalytics @entity {
+  id: ID! # always "SYSTEM"
+  
+  totalVoices: BigInt!
+  totalAttempts: BigInt!
+  globalSuccessRate: BigInt! # scaled by 10000
+  systemOptimalThreshold: BigInt! # global optimal threshold
+  systemSecurityScore: BigInt! # 0-10000
+  lastUpdated: BigInt!
+}
+
+type _Schema_
+  @fulltext(
+    name: "voiceSearch"
+    language: en
+    algorithm: rank
+    include: [
+      {
+        entity: "Voice"
+        fields: [
+          { name: "walrusUri" }
+        ]
+      }
+    ]
+  )
