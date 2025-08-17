@@ -10,6 +10,7 @@ import RegistrationForm from './components/RegistrationForm';
 import VoiceProtectionChecker from './components/VoiceProtectionChecker';
 import VoiceRegistrations from './components/VoiceRegistrations.tsx';
 import WalletDemo from './components/WalletDemo';
+import AuthenticationLogs from './components/AuthenticationLogs';
 import './App.css';
 
 function App() {
@@ -17,13 +18,11 @@ function App() {
     <ApolloProvider client={apolloClient}>
       <Router>
         <div className="App">
-          <nav className="navigation">
+          <nav className="navigation py-[10em]">
             <div className="nav-left">
               <Link to="/" className="nav-link">Home</Link>
               <Link to="/register" className="nav-link">Register</Link>
-              <Link to="/authenticate" className="nav-link">Authenticate</Link>
-              <Link to="/registrations" className="nav-link"> Registrations</Link>
-              <Link to="/wallet-demo" className="nav-link">Wallet Demo</Link>
+              <Link to="/wallet-demo" className="nav-link">Demo</Link>
             </div>
             <div className="nav-right">
               <DynamicWidget />
@@ -38,6 +37,7 @@ function App() {
             <Route path="/record" element={<RecordVoice />} />
             <Route path="/protection-checker" element={<VoiceProtectionChecker />} />
             <Route path="/registrations" element={<VoiceRegistrations />} />
+            <Route path="/auth-logs" element={<AuthenticationLogs walletAddress="0x19E95b026731974B7c1feD9eb3c3113fBDD80464" />} />
             <Route path="/wallet-demo" element={<WalletDemo />} />
           </Routes>
         </div>
