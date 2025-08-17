@@ -13,11 +13,11 @@ yarn-error.log*
 
 # Build outputs
 dist/
-dist-ssr/
 build/
+lib/
 
-# Vite
-.vite/
+# TypeScript
+*.tsbuildinfo
 
 # Logs
 logs
@@ -25,7 +25,6 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
 lerna-debug.log*
 
 # Runtime data
@@ -86,12 +85,3 @@ temp/
 # IDE
 .vscode/
 .idea/
-
-# OS generated files
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Trashes
-ehthumbs.db
-Thumbs.db

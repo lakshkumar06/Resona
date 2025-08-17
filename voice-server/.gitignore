@@ -128,6 +128,12 @@ ENV/
 env.bak/
 venv.bak/
 
+# Virtual environment (completely ignore)
+venv/
+.venv/
+env/
+ENV/
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -194,3 +200,10 @@ Thumbs.db
 
 # Embeddings (large vector files)
 embeddings/*.json
+
+# Large library files
+*.dylib
+*.so
+*.dll
+*.a
+*.lib
