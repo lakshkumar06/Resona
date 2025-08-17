@@ -9,6 +9,7 @@ Voice authentication has long been plagued by the fundamental challenge of encod
 ## Our Solution
 
 Resona solves this by deploying a novel zero-knowledge proof system on Zircuit that can verify voice similarity while maintaining complete privacy. Our smart contracts store only cryptographic commitments of voice embeddings, while the ZK-proof system mathematically proves similarity without revealing the actual voice data. This breakthrough enables secure, decentralized voice authentication that scales to millions of users while preserving the mathematical precision of ECAPA-TDNN embeddings.
+## 🏗️ Architecture
 
 ![User Flow Diagram](images/userflow.png)
 
@@ -136,3 +137,344 @@ Our system uses Dynamic for seamless wallet management while leveraging ECAPA-TD
 - **Behavioral Learning**: AI that understands your voice patterns and adapts security accordingly
 
 The AI system acts as an autonomous agent that monitors authentication attempts, learns from user behavior, and provides personalized security recommendations, making Resona a natural extension of Dynamic's vision for intelligent, user-friendly Web3 experiences. This integration creates a **new paradigm** where voice becomes the primary key to your digital identity, seamlessly integrated with Dynamic's powerful wallet infrastructure.
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- Python 3.8+
+- Git
+- MetaMask or other Web3 wallet
+- Zircuit testnet RPC endpoint
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/your-username/resona.git
+   cd resona
+   ```
+
+2. **Install backend dependencies**
+   ```bash
+   cd backend
+   npm install
+   ```
+
+3. **Install frontend dependencies**
+   ```bash
+   cd ../frontend
+   npm install
+   ```
+
+4. **Install smart contract dependencies**
+   ```bash
+   cd ../contracts
+   npm install
+   ```
+
+5. **Install voice server dependencies**
+   ```bash
+   cd ../voice-server
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+6. **Install subgraph dependencies**
+   ```bash
+   cd ../subgraph
+   npm install
+   ```
+
+## 🏃‍♂️ How to Run
+
+### 1. Start the Voice Server
+
+The voice server handles voice embedding generation and similarity calculations:
+
+```bash
+cd voice-server
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+python main.py
+```
+
+The server will start on `http://localhost:8000` and provide endpoints for:
+- Voice embedding generation
+- Similarity calculations
+- Model inference
+
+### 2. Deploy Smart Contracts
+
+Deploy the voice registry contracts to Zircuit testnet:
+
+```bash
+cd contracts
+npx hardhat compile
+npx hardhat run scripts/deploy.js --network zircuit-testnet
+```
+
+**Important**: Update the contract addresses in your configuration files after deployment.
+
+### 3. Deploy the Subgraph
+
+Deploy the subgraph to The Graph's hosted service:
+
+```bash
+cd subgraph
+npm run codegen
+npm run build
+npm run deploy
+```
+
+### 4. Start the Backend Server
+
+The backend provides the API layer for the frontend:
+
+```bash
+cd backend
+npm run dev
+```
+
+The server will start on `http://localhost:3001` with endpoints for:
+- Voice authentication
+- ZK-proof generation
+- Blockchain interactions
+
+### 5. Start the Frontend
+
+Launch the React frontend application:
+
+```bash
+cd frontend
+npm run dev
+```
+
+The application will be available at `http://localhost:5173`
+
+## 🔍 Where to See the Subgraph
+
+### The Graph Hosted Service
+
+Our subgraph is deployed on The Graph's hosted service and can be accessed at:
+- **Subgraph URL**: [https://thegraph.com/hosted-service/your-subgraph-name](https://thegraph.com/hosted-service/your-subgraph-name)
+- **GraphQL Endpoint**: `https://api.thegraph.com/subgraphs/name/your-subgraph-name`
+
+### Subgraph Studio (Development)
+
+For development and testing, you can also use Subgraph Studio:
+- **URL**: [https://studio.thegraph.com/](https://studio.thegraph.com/)
+- **Local Development**: Run `npm run dev` in the subgraph directory
+
+### Example Queries
+
+Test the subgraph with these example queries:
+
+**Get all voice registrations:**
+```graphql
+query {
+  voices {
+    id
+    owner
+    walrusUri
+    timestamp
+  }
+}
+```
+
+**Get authentication attempts for a specific voice:**
+```graphql
+query {
+  authAttempts(where: { voice: "0x..." }) {
+    id
+    success
+    similarity
+    threshold
+    timestamp
+  }
+}
+```
+
+**Get threshold analytics:**
+```graphql
+query {
+  thresholdAnalytics {
+    id
+    totalAttempts
+    successfulAttempts
+    currentOptimalThreshold
+    securityScore
+  }
+}
+```
+
+## 🧪 Testing
+
+### Run Smart Contract Tests
+
+```bash
+cd contracts
+npx hardhat test
+```
+
+### Test Voice Server
+
+```bash
+cd voice-server
+python -m pytest tests/
+```
+
+### Test Frontend
+
+```bash
+cd frontend
+npm run test
+```
+
+### Test Backend API
+
+```bash
+cd backend
+npm run test
+```
+
+## 🔧 Configuration
+
+### Environment Variables
+
+Create `.env` files in each directory with the following variables:
+
+**Backend (.env):**
+```env
+ZIRCUIT_RPC_URL=your_zircuit_rpc_url
+PRIVATE_KEY=your_private_key
+CONTRACT_ADDRESS=deployed_contract_address
+```
+
+**Frontend (.env):**
+```env
+VITE_BACKEND_URL=http://localhost:3001
+VITE_GRAPH_URL=https://api.thegraph.com/subgraphs/name/your-subgraph-name
+```
+
+**Voice Server (.env):**
+```env
+MODEL_PATH=./pretrained_models/spkrec-ecapa-voxceleb
+PORT=8000
+```
+
+### Network Configuration
+
+Update `hardhat.config.js` in the contracts directory with your network settings:
+
+```javascript
+module.exports = {
+  networks: {
+    zircuitTestnet: {
+      url: process.env.ZIRCUIT_RPC_URL,
+      accounts: [process.env.PRIVATE_KEY],
+      chainId: 80001, // Update with actual Zircuit chain ID
+    }
+  }
+}
+```
+
+## 📱 Usage
+
+### 1. Voice Registration
+
+1. Connect your wallet to the frontend
+2. Navigate to "Register Voice"
+3. Record your voice sample (minimum 3 seconds)
+4. Submit the registration transaction
+5. Wait for confirmation on Zircuit
+
+### 2. Voice Authentication
+
+1. Navigate to "Authenticate Voice"
+2. Record your voice sample
+3. The system will generate a ZK-proof
+4. Submit the authentication transaction
+5. View results and analytics
+
+### 3. View Analytics
+
+1. Go to "Voice Analytics"
+2. See your authentication history
+3. View security scores and recommendations
+4. Monitor threshold adjustments
+
+```
+
+## 🔐 Security Features
+
+- **Zero-Knowledge Proofs**: Voice similarity verification without revealing voice data
+- **Dynamic Thresholds**: AI-powered security that adapts to user behavior
+- **Risk Assessment**: Real-time calculation of authentication risk scores
+- **Privacy Preservation**: Only cryptographic commitments stored on-chain
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+**Voice Server Won't Start:**
+- Ensure Python virtual environment is activated
+- Check if all dependencies are installed
+- Verify model files are in the correct location
+
+**Smart Contract Deployment Fails:**
+- Check network configuration in hardhat.config.js
+- Ensure you have sufficient testnet tokens
+- Verify private key is correct
+
+**Subgraph Not Indexing:**
+- Check subgraph deployment status
+- Verify contract addresses are correct
+- Check network configuration
+
+**Frontend Connection Issues:**
+- Ensure backend server is running
+- Check environment variables
+- Verify wallet connection
+
+### Getting Help
+
+- **Issues**: Create a GitHub issue with detailed error messages
+- **Discord**: Join our community for real-time support
+- **Documentation**: Check the docs folder for detailed guides
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Workflow
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests
+5. Submit a pull request
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- **Zircuit**: For providing the Layer 2 infrastructure
+- **The Graph**: For powerful indexing capabilities
+- **Dynamic**: For embedded wallet infrastructure
+- **ECAPA-TDNN**: For voice embedding technology
+- **Circom**: For zero-knowledge proof framework
+
+## 📞 Contact
+
+- **Website**: [https://resona.xyz](https://resona.xyz)
+- **Twitter**: [@ResonaVoice](https://twitter.com/ResonaVoice)
+- **Discord**: [Join our community](https://discord.gg/resona)
+- **Email**: hello@resona.xyz
+
+---
+
+**Built with ❤️ by the Resona team**
