@@ -30,6 +30,9 @@ Zircuit's **ZK-rollup architecture** transforms this limitation by enabling:
 
 The network's advanced rollup technology handles the complex ZK-proof verification at scale, while its EVM compatibility ensures seamless integration with existing Web3 infrastructure. By deploying on Zircuit, Resona achieves sub-second voice verification with minimal gas costs, making voice-based authentication accessible to mainstream applications for the first time.
 
+
+Deployed block explorer link: https://explorer.garfield-testnet.zircuit.com/address/0xAC3a3123770346d8d4c186d892d81b4522b1D512
+
 ## The Graph Integration
 
 Resona leverages The Graph's powerful indexing capabilities to create an intelligent, adaptive voice authentication system with **efficient data storage and fetching**. Our subgraph implements sophisticated data optimization techniques that enable lightning-fast queries while maintaining comprehensive voice analytics. By leveraging The Graph's advanced indexing algorithms, we achieve sub-second response times for complex queries involving thousands of voice registrations and authentication attempts.
