@@ -1,0 +1,9 @@
+fastapi==0.116.1
+uvicorn==0.35.0
+speechbrain==1.0.3
+torch==2.7.1
+pydub==0.25.1
+python-multipart==0.0.20
+numpy>=1.21.0
+scipy>=1.16.0
+requests>=2.31.0 
