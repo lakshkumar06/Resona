@@ -408,4 +408,4 @@ module.exports = {
 3. View security scores and recommendations
 4. Monitor threshold adjustments
 
-```
+
